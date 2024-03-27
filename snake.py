@@ -16,7 +16,7 @@ class SNAKE:
         self.body = [Vector2(5,10),Vector2(4,10), Vector2(3,10)]
         self.direction = Vector2(1,0)
         self.new_block = 0
-        self.speed=100
+        self.speed=140
         self.head_up = pygame.image.load('photos/head_up.png').convert_alpha()
         self.head_down = pygame.image.load('photos/head_down.png').convert_alpha()
         self.head_right = pygame.image.load('photos/head_right.png').convert_alpha()

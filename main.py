@@ -1,4 +1,5 @@
 import pygame,sys,random
+import threading
 from pygame.math import Vector2
 from lava import LAVA
 from fruit import FRUIT
@@ -22,7 +23,7 @@ def main_function(diff):
     game_font = pygame.font.Font("fonts/PoetsenOne-Regular.ttf",25)
 
     SCREEN_UPDATE = pygame.USEREVENT
-    pygame.time.set_timer(SCREEN_UPDATE,100)
+    pygame.time.set_timer(SCREEN_UPDATE,140)
     music_choice=random.randint(1,3)
     temp_music=pygame.mixer.Sound(f"sounds/music/{music_choice}.mp3")
     temp_music.play()
@@ -47,7 +48,20 @@ def main_function(diff):
                 if event.key == pygame.K_LEFT:
                     if main_game.snake.direction.x!=1:
                         main_game.snake.direction = Vector2(-1,0)
-        screen.fill((175,215,70))
+        if main_game.level%4==0:
+            screen.fill((175,215,70))
+        elif main_game.level%4==1:
+            screen.fill((255,165,0))
+        elif main_game.level%4==2:
+            screen.fill((255,215,0))
+        elif main_game.level%4==3:
+            screen.fill((175, 238, 238))
+        if len(main_game.snake.body)>=10 and main_game.level<1:
+            main_game.level=1
+        if len(main_game.snake.body)>=15 and main_game.level<2:
+            main_game.level=2
+        if len(main_game.snake.body)>=20:
+            main_game.level=3
         main_game.draw_elements()
         #draw all our elements
         pygame.display.update()

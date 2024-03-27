@@ -1,10 +1,13 @@
 import pygame,sys,random
+import threading
 from pygame.math import Vector2
 from lava import LAVA
 from fruit import FRUIT
 from snake import SNAKE
 from speed_fruit import S_FRUIT
 from burger import BURGER
+from timer import RepeatTimer
+
 
 pygame.init()
 cell_size=40
@@ -17,15 +20,18 @@ burger1 = pygame.image.load("photos/burger.png").convert_alpha()
 lava1 = pygame.image.load("photos/lava.png").convert_alpha()
 game_font = pygame.font.Font("fonts/PoetsenOne-Regular.ttf",25)
 
+
 class MAIN(SNAKE,FRUIT,LAVA):
     def __init__(self):
         self.snake = SNAKE()
         self.fruit = FRUIT()
         self.s_fruit = []
         self.lava = [LAVA()]
+        self.timers = []
         self.diff = 1
         self.burger = []
         self.lives=2
+        self.level=0
     def update(self):
         self.snake.move_snake()
         self.check_collision()
@@ -70,40 +76,20 @@ class MAIN(SNAKE,FRUIT,LAVA):
             for i in range(int(self.diff)):
                 new_lava = LAVA()
                 self.lava.append(new_lava)
-                self.lava[-1].randomize()
-                while True:
-                    sch=0
-                    lav=self.lava[-1]
-                    for i in range(len(self.lava)-2):
-                        if self.lava[i].x==lav.x and self.lava[i].y==lav.y:
-                            self.lava[-1].randomize()
-                            sch+=1
-                    for block in self.snake.body[1:]:
-                        if block.x==lav.x and block.y==lav.y:
-                            self.lava[-1].randomize()
-                            sch+=1
-                    for el in self.s_fruit:
-                        if el.x == lav.x and el.y==lav.y:
-                            self.lava[-1].randomize()
-                            sch+=1
-                    for el in self.burger:
-                        if el.pos == lav.pos:
-                            self.lava[-1].randomize()
-                            sch+=1
-                    if sch==0:
-                        break
-            if len(self.snake.body)%5==0:
+                self.timers.append(RepeatTimer(15, self.respawn_lava, [len(self.lava)-1]))
+                self.timers[-1].start()
+            if len(self.snake.body)%5==0 and self.level>0:
                 new_s_apple=S_FRUIT()
                 self.s_fruit.append(new_s_apple)
                 self.s_fruit[-1].randomize()
                 while True:
                     sch=0
                     for i in range(len(self.lava)-1):
-                        if self.s_fruit[-1].pos==self.lava[i].pos:
+                        if self.s_fruit[-1].pos==self.lava[i].pos or self.fruit.pos==self.s_fruit[-1].pos:
                             self.s_fruit[-1].randomize()
                             sch+=1
                     for block in self.snake.body[1:]:
-                        if block.x==self.s_fruit[-1].x and block.y==self.s_fruit[-1].y:
+                        if block==self.s_fruit[-1].pos:
                             self.s_fruit[-1].randomize()
                             sch+=1
                     for el in range(len(self.s_fruit)-2):
@@ -111,27 +97,31 @@ class MAIN(SNAKE,FRUIT,LAVA):
                             self.s_fruit[-1].randomize()
                             sch+=1
                     for block in self.burger:
-                        if block.pos==self.s_fruit[-1].x:
+                        if block.pos==self.s_fruit[-1].pos:
                             self.s_fruit[-1].randomize()
                             sch+=1
                     if sch==0:
                         break
-            if len(self.snake.body)%10==0:
+            if len(self.snake.body)%5==0 and self.level>1:
                 burger = BURGER()
                 self.burger.append(burger)
                 self.burger[-1].randomize()
                 while True:
                     sch=0
                     for i in range(len(self.lava)-1):
-                        if self.burger[-1].pos==self.lava[i].pos:
+                        if self.burger[-1].pos==self.lava[i].pos or self.fruit.pos==self.burger[-1].pos:
                             self.burger[-1].randomize()
                             sch+=1
                     for block in self.snake.body[1:]:
-                        if block.x==self.burger[-1].x and block.y==self.burger[-1].y:
+                        if block==self.burger[-1].pos:
                             self.burger[-1].randomize()
                             sch+=1
                     for el in self.s_fruit:
                         if el.pos==self.burger[-1].pos:
+                            self.burger[-1].randomize()
+                            sch+=1
+                    for block in range(len(self.burger)-2):
+                        if self.burger[block].pos==self.burger[-1].pos:
                             self.burger[-1].randomize()
                             sch+=1
                     if sch==0:
@@ -144,6 +134,8 @@ class MAIN(SNAKE,FRUIT,LAVA):
                     self.snake.delete_block()
                     self.lives-=1
                 else:
+                    for i in range(len(self.timers)):
+                        self.timers[i].cancel()
                     self.game_over()
         for el in self.s_fruit:
             if el.pos == self.snake.body[0]:
@@ -156,17 +148,49 @@ class MAIN(SNAKE,FRUIT,LAVA):
                 self.snake.add_block(3)
                 self.snake.play_crunch_sound()
                 self.burger.remove(el)
-
+    def respawn_lava(self,position):
+        self.lava[position].randomize()
+        while True:
+            sch=0
+            for i in self.s_fruit:
+                if i.pos==self.lava[position].pos or self.lava[position].pos==self.fruit.pos:
+                    self.lava[position].randomize()
+                    sch+=1
+            for block in self.snake.body[1:]:
+                if block==self.lava[position].pos:
+                    self.lava[position].randomize()
+                    sch+=1
+            for el in range(len(self.lava)-1):
+                if el!=position and self.lava[el].pos==self.lava[position].pos:
+                    self.lava[position].randomize()
+                    sch+=1
+            for block in self.burger:
+                if block.pos==self.lava[position].pos:
+                    self.lava[position].randomize()
+                    sch+=1
+            if sch==0:
+                break
     def check_fail(self):
         if not 0 <= self.snake.body[0].x < cell_number or not 0 <= self.snake.body[0].y < cell_number:
+            for i in range(len(self.timers)):
+                self.timers[i].cancel()
             self.game_over()
         
         for block in self.snake.body[1:]:
             if block == self.snake.body[0]:
+                for i in range(len(self.timers)):
+                    self.timers[i].cancel()
                 self.game_over()
 
     def draw_grass(self):
-        grass_color=(167,209,61)
+        if self.level%4==0:
+            grass_color=(167,209,61)
+        if self.level%4==1:
+            grass_color=(255, 140, 0)
+        if self.level%4==2:
+            grass_color=(240, 230, 140)
+        if self.level%4==3:
+            grass_color=(224, 255, 255)
         for row in range(cell_number):
             if row%2==0:
                 for column in range(cell_number):
