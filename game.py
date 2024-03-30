@@ -181,12 +181,22 @@ class MAIN(SNAKE,FRUIT,LAVA):
             if sch==0:
                 break
     def check_fail(self):
-        if not 0 <= self.snake.body[0].x < cell_number or not 0 <= self.snake.body[0].y < cell_number:
-            for i in range(len(self.timers)):
-                self.timers[i].cancel()
-            self.in_game=0
+        # if not 0 <= self.snake.body[0].x < cell_number or not 0 <= self.snake.body[0].y < cell_number:
+        if not 0 <= self.snake.body[0].x:
+            self.snake.body[0].x = cell_number
+        elif not self.snake.body[0].x<cell_number:
+            self.snake.body[0].x = 0
+        elif not 0 <= self.snake.body[0].y:
+            self.snake.body[0].y = cell_number
+        elif not self.snake.body[0].y<cell_number:
+            self.snake.body[0].y = 0
+            # for i in range(len(self.timers)):
+            #     self.timers[i].cancel()
+            # self.in_game=0
+            # //////////////
             # self.game_over()
             # menu_funcion(main_function(self.diff))
+
         
         for block in self.snake.body[1:]:
             if block == self.snake.body[0]:
