@@ -16,6 +16,8 @@ class S_FRUIT:
         #create an x and y position
         #draw a square
         self.randomize()
+    def __str__(self):
+        return f"{self.x}${self.y}"
     def draw_s_fruit(self):
         #create a rectangle 
         # draw a rectangle

@@ -32,10 +32,18 @@ class MAIN(SNAKE,FRUIT,LAVA):
         self.burger = []
         self.lives=2
         self.level=0
+        self.in_game=1
     def update(self):
         self.snake.move_snake()
         self.check_collision()
         self.check_fail()
+    def display_info(self):
+        return self.__str__()
+    def __str__(self):
+        lava_arr=[x.__str__() for x in self.lava]
+        s_fruit_arr=[x.__str__() for x in self.s_fruit]
+        burger_arr=[x.__str__() for x in self.burger]
+        return f"{self.snake.__str__()}#{self.fruit.__str__()}#{s_fruit_arr.__str__()}#{str(lava_arr)}#{self.diff.__str__()}#{self.burger.__str__()}#{self.lives.__str__()}#{self.level.__str__()}#{self.in_game}"
     def draw_elements(self):
         self.draw_grass()
         self.fruit.draw_fruit()
@@ -136,7 +144,9 @@ class MAIN(SNAKE,FRUIT,LAVA):
                 else:
                     for i in range(len(self.timers)):
                         self.timers[i].cancel()
-                    self.game_over()
+                    self.in_game=0
+                    # menu_funcion(main_function(self.diff))
+                    # self.game_over()
         for el in self.s_fruit:
             if el.pos == self.snake.body[0]:
                 self.snake.add_speed()
@@ -174,13 +184,17 @@ class MAIN(SNAKE,FRUIT,LAVA):
         if not 0 <= self.snake.body[0].x < cell_number or not 0 <= self.snake.body[0].y < cell_number:
             for i in range(len(self.timers)):
                 self.timers[i].cancel()
-            self.game_over()
+            self.in_game=0
+            # self.game_over()
+            # menu_funcion(main_function(self.diff))
         
         for block in self.snake.body[1:]:
             if block == self.snake.body[0]:
                 for i in range(len(self.timers)):
                     self.timers[i].cancel()
-                self.game_over()
+                self.in_game=0
+                # self.game_over()
+                # menu_funcion(main_function(self.diff))
 
     def draw_grass(self):
         if self.level%4==0:
