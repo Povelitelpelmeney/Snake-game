@@ -9,13 +9,18 @@ from save_loader import loader
 
 
 
-def main_function(diff,obj = MAIN()):
+def main_function(diff,obj = 0):
+    print(diff)
     pygame.init()
     cell_size=40
     cell_number=20
     screen  = pygame.display.set_mode((cell_number*cell_size,cell_number*cell_size))
     clock = pygame.time.Clock()
-    main_game=obj
+    if obj==0:
+        main_game=MAIN()
+    else:
+        main_game=obj
+    main_game.diff=diff
     info = main_game.display_info()
     loader(info)
     apple = pygame.image.load("photos/apple.png").convert_alpha()
@@ -71,7 +76,9 @@ def main_function(diff,obj = MAIN()):
             main_game.level=3
         main_game.draw_elements()
         if main_game.in_game==0:
-            return 0
+            temp_music.stop()
+            # return 0
+            break
 
         #draw all our elements
         pygame.display.update()

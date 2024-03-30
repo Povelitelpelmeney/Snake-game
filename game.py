@@ -138,7 +138,7 @@ class MAIN(SNAKE,FRUIT,LAVA):
             #add length to snake
         for lav in self.lava:
             if lav.pos == self.snake.body[0]:
-                if self.lives>0:
+                if self.lives>0 and len(self.snake.body)>3:
                     self.snake.delete_block()
                     self.lives-=1
                 else:

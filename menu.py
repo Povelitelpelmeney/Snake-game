@@ -16,7 +16,7 @@ def change_difficulty(value,difficulty):
     menu.remove_widget(button3)
     pars=parser()
     button1=menu.add.button('Play', main_function,diff)
-    button2=menu.add.button('Save_load', main_function, diff,pars)
+    button2=menu.add.button('Save_load', main_function, pars.diff,pars)
     button3=menu.add.button('Quit', pygame_menu.events.EXIT)
 surface = pygame.display.set_mode((800, 800))
 
@@ -31,6 +31,6 @@ def menu_funcion():
                     theme=pygame_menu.themes.THEME_GREEN)
     menu.add.selector('difficulty', [('easy', 1), ('medium', 2), ('hard', 3)], onchange=change_difficulty, style='fancy', style_fancy_arrow_margin=(0, 0, 0), style_fancy_bgcolor=(0, 0, 0, 0), style_fancy_bordercolor=(0, 0, 0, 0), style_fancy_arrow_color=(220, 132, 201))
     button1=menu.add.button('Play', main_function, diff)
-    button2=menu.add.button('Save_load', main_function, diff,pars)
+    button2=menu.add.button('Save_load', main_function,pars.diff,pars)
     button3 = menu.add.button('Quit', pygame_menu.events.EXIT)
     menu.mainloop(surface)
