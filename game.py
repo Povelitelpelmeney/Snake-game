@@ -62,7 +62,7 @@ class MAIN(SNAKE,FRUIT,LAVA):
             while True:
                 sch=0
                 for lav in self.lava:
-                    if self.fruit.x==lav.x and self.fruit.y==lav.y:
+                    if self.fruit.pos==lav.pos:
                         self.fruit.randomize()
                         sch+=1
                 for block in self.snake.body[1:]:
@@ -84,6 +84,7 @@ class MAIN(SNAKE,FRUIT,LAVA):
             for i in range(int(self.diff)):
                 new_lava = LAVA()
                 self.lava.append(new_lava)
+                self.respawn_lava(len(self.lava)-1)
                 self.timers.append(RepeatTimer(15, self.respawn_lava, [len(self.lava)-1]))
                 self.timers[-1].start()
             if len(self.snake.body)%5==0 and self.level>0:

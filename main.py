@@ -10,7 +10,6 @@ from save_loader import loader
 
 
 def main_function(diff,obj = 0):
-    print(diff)
     pygame.init()
     cell_size=40
     cell_number=20
