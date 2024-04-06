@@ -15,6 +15,7 @@ cell_number=20
 screen  = pygame.display.set_mode((cell_number*cell_size,cell_number*cell_size))
 clock = pygame.time.Clock()
 apple = pygame.image.load("photos/apple.png").convert_alpha()
+heart = pygame.image.load("photos/heart.png").convert_alpha()
 s_apple = pygame.image.load("photos/g_apple.png").convert_alpha()
 burger1 = pygame.image.load("photos/burger.png").convert_alpha()
 lava1 = pygame.image.load("photos/lava.png").convert_alpha()
@@ -55,6 +56,7 @@ class MAIN(SNAKE,FRUIT,LAVA):
         for lav in self.lava:
             lav.draw_lava()
         self.draw_score()
+        self.draw_lives()
 
     def check_collision(self):
         if self.fruit.pos==self.snake.body[0]:
@@ -228,12 +230,37 @@ class MAIN(SNAKE,FRUIT,LAVA):
                         grass_rect=pygame.Rect(column*cell_size,row*cell_size,cell_size,cell_size)
                         pygame.draw.rect(screen,grass_color,grass_rect)
     def draw_score(self):
-        score_text = str(len(self.snake.body)-3)
+        score_text = str(len(self.snake.body) - 3)
         score_surface = game_font.render(score_text,True,(56,74,12))
         score_x = int(cell_size * cell_number - 60)
         score_y = int(cell_size * cell_number - 40)
         score_rect = score_surface.get_rect(center = (score_x,score_y))
+        apple_rect = apple.get_rect(midright = (score_rect.left,score_rect.centery))
+        bg_rect = pygame.Rect(apple_rect.left,apple_rect.top,apple_rect.width + score_rect.width + 6,apple_rect.height)
+        pygame.draw.rect(screen,(167,209,61),bg_rect)
         screen.blit(score_surface,score_rect)
+        screen.blit(apple,apple_rect)
+        pygame.draw.rect(screen,(56,74,12),bg_rect,2)
+
+    def draw_lives(self):
+        if(len(self.snake.body)>3):
+            if(len(self.snake.body)*0.4>3):
+                score_text=3
+            else:
+                score_text=2
+        else:
+            score_text = 1
+        score_text=str(score_text)
+        score_surface = game_font.render(score_text,True,(56,74,12))
+        score_x = int(cell_size+45)
+        score_y = int(cell_size * cell_number - 40)
+        score_rect = score_surface.get_rect(center = (score_x,score_y))
+        heart_rect = heart.get_rect(midright = (score_rect.left,score_rect.centery))
+        bg_rect = pygame.Rect(heart_rect.left,heart_rect.top,heart_rect.width + score_rect.width + 6,heart_rect.height)
+        pygame.draw.rect(screen,(167,209,61),bg_rect)
+        screen.blit(score_surface,score_rect)
+        screen.blit(heart,heart_rect)
+        pygame.draw.rect(screen,(56,74,12),bg_rect,2)
         
     def game_over(self):
         pygame.quit()

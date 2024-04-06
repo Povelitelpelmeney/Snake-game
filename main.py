@@ -23,6 +23,7 @@ def main_function(diff,obj = 0):
     info = main_game.display_info()
     loader(info)
     apple = pygame.image.load("photos/apple.png").convert_alpha()
+    heart = pygame.image.load("photos/heart.png").convert_alpha()
     s_apple = pygame.image.load("photos/g_apple.png").convert_alpha()
     lava1 = pygame.image.load("photos/lava.png").convert_alpha()
     burger1 = pygame.image.load("photos/burger.png").convert_alpha()
