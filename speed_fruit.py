@@ -1,30 +1,37 @@
-import pygame,sys,random
+import pygame
+import random
 from pygame.math import Vector2
 
 pygame.init()
-cell_size=40
-cell_number=20
-screen  = pygame.display.set_mode((cell_number*cell_size,cell_number*cell_size))
+cell_size = 40
+cell_number = 20
+screen = pygame.display.set_mode((cell_number * cell_size,
+                                  cell_number * cell_size))
 clock = pygame.time.Clock()
 apple = pygame.image.load("photos/apple.png").convert_alpha()
 s_apple = pygame.image.load("photos/g_apple.png").convert_alpha()
 lava1 = pygame.image.load("photos/lava.png").convert_alpha()
-game_font = pygame.font.Font("fonts/PoetsenOne-Regular.ttf",25)
+game_font = pygame.font.Font("fonts/PoetsenOne-Regular.ttf", 25)
+
 
 class S_FRUIT:
     def __init__(self):
-        #create an x and y position
-        #draw a square
+        # create an x and y position
+        # draw a square
         self.randomize()
+
     def __str__(self):
         return f"{self.x}${self.y}"
+
     def draw_s_fruit(self):
-        #create a rectangle 
+        # create a rectangle
         # draw a rectangle
-        fruit_rect = pygame.Rect(int(self.x*cell_size),int(self.y*cell_size),cell_size,cell_size)
-        # pygame.draw.rect(screen,(126,166,114),fruit_rect)
-        screen.blit(s_apple,fruit_rect)
+        fruit_rect = pygame.Rect(int(self.x * cell_size),
+                                 int(self.y * cell_size),
+                                 cell_size, cell_size)
+        screen.blit(s_apple, fruit_rect)
+
     def randomize(self):
-        self.x = random.randint(0,cell_number-1)
-        self.y = random.randint(0,cell_number-1)
-        self.pos = Vector2(self.x,self.y)
+        self.x = random.randint(0, cell_number - 1)
+        self.y = random.randint(0, cell_number - 1)
+        self.pos = Vector2(self.x, self.y)

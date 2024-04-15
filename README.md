@@ -5,7 +5,7 @@ beautiful sound design and next-gen graphics!
 Free for now
 
 ## How to run:
-In order to play a game, you need to download all the modules game needs (they are listed in the requirements file) and run the menu.py file.
+In order to play a game, you need to download all the modules game needs (they are listed in the requirements file) and run the run.py file.
 
 Enjoy!
 
